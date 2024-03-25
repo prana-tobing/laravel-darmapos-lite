@@ -26,20 +26,6 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', UserController::class);
 
     Route::resource('products', \App\Http\Controllers\ProductController::class);
+
+    Route::resource('orders', \App\Http\Controllers\OrderController::class);
 });
-
-// Route::get('/', function () {
-//     return view('pages.dashboard');
-// });
-
-// Route::get('/login', function () {
-//     return view('pages.auth.auth-login');
-// })->name('login');
-
-// Route::get('/register', function () {
-//     return view('pages.auth.auth-register');
-// })->name('register');
-
-// Route::get('/users', function () {
-//     return view('pages.users.index');
-// })->name('users');

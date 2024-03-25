@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 
 class ProductController extends Controller
 {
@@ -22,13 +24,22 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
             'price' => 'required|integer',
             'stock' => 'required|integer',
             'category' => 'required|in:food,drink,snack',
-            'image' => 'required|image|mimes:png,jpg,jpeg'
+            'image' => 'required|image|mimes:png,jpg,jpeg,webp'
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+                'mimeType' => $request->file('image')->getMimeType(),
+            ], 422);
+        }
+
         $filename = time() . '.' . $request->image->extension();
         $request->image->storeAs('public/products', $filename);
         $product = \App\Models\Product::create([
@@ -37,7 +48,7 @@ class ProductController extends Controller
             'stock' => (int) $request->stock,
             'category' => $request->category,
             'image' => $filename,
-            'is_favorite' => $request->is_favorite
+            'is_best_seller' => $request->is_best_seller == '1' ? true : false
         ]);
 
         if ($product) {

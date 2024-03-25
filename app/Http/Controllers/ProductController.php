@@ -13,7 +13,7 @@ class ProductController extends Controller
             ->when($request->input('name'), function ($query, $name) {
                 return $query->where('name', 'ilike', '%' . $name . '%');
             })
-            ->orderBy('created_at', 'desc')
+            ->orderBy('name', 'desc')
             ->paginate(5);
         return view('pages.products.index', compact('products'));
     }
@@ -26,7 +26,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|min:3|unique:products',
+            'name' => 'required|min:3',
             'price' => 'required|integer',
             'stock' => 'required|integer',
             'category' => 'required|in:food,drink,snack',
